@@ -9,13 +9,16 @@ export interface AnalysisResult {
   overallScore: number;
   feedback: string[];
   keyPoints: {
-    setup: { score: number; feedback: string };
-    liftOff: { score: number; feedback: string };
-    midRange: { score: number; feedback: string };
-    lockout: { score: number; feedback: string };
-    barPath: { score: number; feedback: string };
+    setup: { score: number; feedback: string; strengths?: string[]; improvements?: string[] };
+    liftOff: { score: number; feedback: string; strengths?: string[]; improvements?: string[] };
+    midRange: { score: number; feedback: string; strengths?: string[]; improvements?: string[] };
+    lockout: { score: number; feedback: string; strengths?: string[]; improvements?: string[] };
+    barPath: { score: number; feedback: string; strengths?: string[]; improvements?: string[] };
   };
   timestamp: string;
+  keyRecommendations?: string[];
+  practiceAreas?: string[];
+  safetyNotes?: string[];
 }
 
 export default function Home() {
@@ -137,7 +140,6 @@ Please provide your analysis in the following JSON structure:
               feedback:
                 result.structuredAnalysis?.keyPoints?.setup?.feedback ||
                 'Analysis completed',
-              //@ts-ignore
               strengths:
                 result.structuredAnalysis?.keyPoints?.setup?.strengths || [],
               improvements:
@@ -148,7 +150,6 @@ Please provide your analysis in the following JSON structure:
               feedback:
                 result.structuredAnalysis?.keyPoints?.liftOff?.feedback ||
                 'Analysis completed',
-              //@ts-ignore
               strengths:
                 result.structuredAnalysis?.keyPoints?.liftOff?.strengths || [],
               improvements:
@@ -160,8 +161,7 @@ Please provide your analysis in the following JSON structure:
                 result.structuredAnalysis?.keyPoints?.midRange?.score || 75,
               feedback:
                 result.structuredAnalysis?.keyPoints?.midRange?.feedback ||
-                'Analysis completed', //@ts-ignore
-              //@ts-ignore
+                'Analysis completed',
               strengths:
                 result.structuredAnalysis?.keyPoints?.midRange?.strengths || [],
               improvements:
@@ -173,7 +173,6 @@ Please provide your analysis in the following JSON structure:
               feedback:
                 result.structuredAnalysis?.keyPoints?.lockout?.feedback ||
                 'Analysis completed',
-              //@ts-ignore
               strengths:
                 result.structuredAnalysis?.keyPoints?.lockout?.strengths || [],
               improvements:
@@ -185,7 +184,6 @@ Please provide your analysis in the following JSON structure:
               feedback:
                 result.structuredAnalysis?.keyPoints?.barPath?.feedback ||
                 'Analysis completed',
-              //@ts-ignore
               strengths:
                 result.structuredAnalysis?.keyPoints?.barPath?.strengths || [],
               improvements:
