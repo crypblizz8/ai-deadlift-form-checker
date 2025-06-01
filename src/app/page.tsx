@@ -41,17 +41,17 @@ export default function Home() {
 
   const analyzeVideo = async () => {
     if (!videoUrl) return;
-    
+
     setIsAnalyzing(true);
-    
+
     try {
       // Only analyze with Gemini if we have an actual uploaded file
       if (videoFile) {
         // Convert video file to base64 for Gemini API
         const base64Video = await convertVideoToBase64(videoFile);
-        
+
         console.log('Sending video to Gemini API for analysis...');
-        
+
         const response = await fetch('/api/analyze-video', {
           method: 'POST',
           headers: {
@@ -109,8 +109,8 @@ Please provide your analysis in the following JSON structure:
     "Important safety consideration 1",
     "Important safety consideration 2"
   ]
-}`
-          })
+}`,
+          }),
         });
 
         if (!response.ok) {
@@ -119,7 +119,7 @@ Please provide your analysis in the following JSON structure:
 
         const result = await response.json();
         console.log('Gemini analysis result:', result);
-        
+
         if (!result.success) {
           throw new Error('Analysis was not successful');
         }
@@ -128,49 +128,79 @@ Please provide your analysis in the following JSON structure:
         const geminiAnalysis: AnalysisResult = {
           overallScore: result.structuredAnalysis?.overallScore || 75,
           feedback: result.structuredAnalysis?.feedback || [
-            "AI Analysis from Gemini:",
-            result.rawAnalysis || "No analysis available"
+            'AI Analysis from Gemini:',
+            result.rawAnalysis || 'No analysis available',
           ],
           keyPoints: {
-            setup: { 
-              score: result.structuredAnalysis?.keyPoints?.setup?.score || 75, 
-              feedback: result.structuredAnalysis?.keyPoints?.setup?.feedback || "Analysis completed",
-              strengths: result.structuredAnalysis?.keyPoints?.setup?.strengths || [],
-              improvements: result.structuredAnalysis?.keyPoints?.setup?.improvements || []
+            setup: {
+              score: result.structuredAnalysis?.keyPoints?.setup?.score || 75,
+              feedback:
+                result.structuredAnalysis?.keyPoints?.setup?.feedback ||
+                'Analysis completed',
+              //@ts-ignore
+              strengths:
+                result.structuredAnalysis?.keyPoints?.setup?.strengths || [],
+              improvements:
+                result.structuredAnalysis?.keyPoints?.setup?.improvements || [],
             },
-            liftOff: { 
-              score: result.structuredAnalysis?.keyPoints?.liftOff?.score || 75, 
-              feedback: result.structuredAnalysis?.keyPoints?.liftOff?.feedback || "Analysis completed",
-              strengths: result.structuredAnalysis?.keyPoints?.liftOff?.strengths || [],
-              improvements: result.structuredAnalysis?.keyPoints?.liftOff?.improvements || []
+            liftOff: {
+              score: result.structuredAnalysis?.keyPoints?.liftOff?.score || 75,
+              feedback:
+                result.structuredAnalysis?.keyPoints?.liftOff?.feedback ||
+                'Analysis completed',
+              //@ts-ignore
+              strengths:
+                result.structuredAnalysis?.keyPoints?.liftOff?.strengths || [],
+              improvements:
+                result.structuredAnalysis?.keyPoints?.liftOff?.improvements ||
+                [],
             },
-            midRange: { 
-              score: result.structuredAnalysis?.keyPoints?.midRange?.score || 75, 
-              feedback: result.structuredAnalysis?.keyPoints?.midRange?.feedback || "Analysis completed",
-              strengths: result.structuredAnalysis?.keyPoints?.midRange?.strengths || [],
-              improvements: result.structuredAnalysis?.keyPoints?.midRange?.improvements || []
+            midRange: {
+              score:
+                result.structuredAnalysis?.keyPoints?.midRange?.score || 75,
+              feedback:
+                result.structuredAnalysis?.keyPoints?.midRange?.feedback ||
+                'Analysis completed', //@ts-ignore
+              //@ts-ignore
+              strengths:
+                result.structuredAnalysis?.keyPoints?.midRange?.strengths || [],
+              improvements:
+                result.structuredAnalysis?.keyPoints?.midRange?.improvements ||
+                [],
             },
-            lockout: { 
-              score: result.structuredAnalysis?.keyPoints?.lockout?.score || 75, 
-              feedback: result.structuredAnalysis?.keyPoints?.lockout?.feedback || "Analysis completed",
-              strengths: result.structuredAnalysis?.keyPoints?.lockout?.strengths || [],
-              improvements: result.structuredAnalysis?.keyPoints?.lockout?.improvements || []
+            lockout: {
+              score: result.structuredAnalysis?.keyPoints?.lockout?.score || 75,
+              feedback:
+                result.structuredAnalysis?.keyPoints?.lockout?.feedback ||
+                'Analysis completed',
+              //@ts-ignore
+              strengths:
+                result.structuredAnalysis?.keyPoints?.lockout?.strengths || [],
+              improvements:
+                result.structuredAnalysis?.keyPoints?.lockout?.improvements ||
+                [],
             },
-            barPath: { 
-              score: result.structuredAnalysis?.keyPoints?.barPath?.score || 75, 
-              feedback: result.structuredAnalysis?.keyPoints?.barPath?.feedback || "Analysis completed",
-              strengths: result.structuredAnalysis?.keyPoints?.barPath?.strengths || [],
-              improvements: result.structuredAnalysis?.keyPoints?.barPath?.improvements || []
-            }
+            barPath: {
+              score: result.structuredAnalysis?.keyPoints?.barPath?.score || 75,
+              feedback:
+                result.structuredAnalysis?.keyPoints?.barPath?.feedback ||
+                'Analysis completed',
+              //@ts-ignore
+              strengths:
+                result.structuredAnalysis?.keyPoints?.barPath?.strengths || [],
+              improvements:
+                result.structuredAnalysis?.keyPoints?.barPath?.improvements ||
+                [],
+            },
           },
           timestamp: result.timestamp,
-          keyRecommendations: result.structuredAnalysis?.keyRecommendations || [],
+          keyRecommendations:
+            result.structuredAnalysis?.keyRecommendations || [],
           practiceAreas: result.structuredAnalysis?.practiceAreas || [],
-          safetyNotes: result.structuredAnalysis?.safetyNotes || []
+          safetyNotes: result.structuredAnalysis?.safetyNotes || [],
         };
 
         setAnalysis(geminiAnalysis);
-        
       } else {
         // Fallback to mock analysis for example videos
         const mockAnalysis: AnalysisResult = {
@@ -182,7 +212,8 @@ Please provide your analysis in the following JSON structure:
           keyPoints: {
             setup: {
               score: Math.floor(Math.random() * 20) + 80,
-              feedback: 'Example analysis - upload your video for real AI feedback',
+              feedback:
+                'Example analysis - upload your video for real AI feedback',
             },
             liftOff: {
               score: Math.floor(Math.random() * 25) + 75,
@@ -205,12 +236,13 @@ Please provide your analysis in the following JSON structure:
         };
         setAnalysis(mockAnalysis);
       }
-      
+
       setShowAnalysis(true);
-      
     } catch (error) {
       console.error('Video analysis failed:', error);
-      alert('Video analysis failed. Please try again or check the console for details.');
+      alert(
+        'Video analysis failed. Please try again or check the console for details.'
+      );
     } finally {
       setIsAnalyzing(false);
     }
@@ -283,7 +315,13 @@ Please provide your analysis in the following JSON structure:
               </button>
             </div>
 
-            <div className={`${!showAnalysis ? 'flex justify-center' : 'grid lg:grid-cols-2 gap-8'}`}>
+            <div
+              className={`${
+                !showAnalysis
+                  ? 'flex justify-center'
+                  : 'grid lg:grid-cols-2 gap-8'
+              }`}
+            >
               {/* Video Player */}
               <div className={`${!showAnalysis ? 'max-w-md w-full' : ''}`}>
                 <video
